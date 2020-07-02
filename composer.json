@@ -1,0 +1,35 @@
+{
+    "name": "twgroupcl/bagisto-webpay-plus",
+    "description": "WebPay Plus module for Bagisto.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jorge Castro",
+            "email": "jorge.castro@twgroup.cl"
+        },
+        {
+            "name": "Guillermo Lobos",
+            "email": "guillermo.lobos@twgroup.cl"
+        }
+    ],
+
+    "require": {
+        "freshwork/transbank": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Twgroup\\WebPay\\": "src/"
+        }
+    },
+
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Twgroup\\WebPay\\Providers\\BagistoWebPayServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+
+    "minimum-stability": "dev"
+}
