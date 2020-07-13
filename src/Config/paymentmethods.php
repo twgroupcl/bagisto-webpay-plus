@@ -10,4 +10,14 @@ return [
         'active' => true,
         'sort' => 4,
     ],
+
+    'webpay_plus_mall' => [
+        'code' => 'webpay_plus_mall',
+        'title' => 'WebPay Plus Mall',
+        'description' => 'WebPay Plus Mall',
+        'class' => 'Twgroup\WebPay\Payment\WebPayPlusMall',
+        'sandbox' => true,
+        'active' => true,
+        'sort' => 4,
+    ],
  ];
