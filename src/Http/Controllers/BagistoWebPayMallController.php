@@ -94,7 +94,23 @@ class BagistoWebPayMallController extends Controller
 
         $response = $transaction->getTransactionResult(request()->input('token_ws'));
 
-        foreach ($response->detailOutput as $output) {
+        if (is_array($response->detailOutput)) {
+            foreach ($response->detailOutput as $output) {
+                if ($output->responseCode == 0) {
+                    Cart::deActivateCart();
+
+                    $this->mkOrderRepository->findOneWhere(['id' => $output->buyOrder])->update([
+                        'status' => 'completed',
+                    ]);
+
+                    $this->webpayPlusRepository->findOneWhere(['order_id' => $response->buyOrder])->update([
+                        'status' => 'completed',
+                    ]);
+                }
+            }
+        } else {
+            $output = $response->detailOutput;
+            
             if ($output->responseCode == 0) {
                 Cart::deActivateCart();
 
@@ -107,6 +123,7 @@ class BagistoWebPayMallController extends Controller
                 ]);
             }
         }
+        
 
         return RedirectorHelper::redirectBackNormal($response->urlRedirection);
     }
