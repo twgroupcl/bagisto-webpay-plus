@@ -49,7 +49,7 @@ $webPayPlusRepository->create([
 	'order_id' => $order->id,
 ]);
 
-session()->flash('order', $order);
+session('order', $order);
 
 @endphp
 
