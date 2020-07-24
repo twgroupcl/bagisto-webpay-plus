@@ -49,14 +49,18 @@ $cart = $webPayPlus->getCart();
 $itemsCart = $cart->items;
 
 $deliveryAmounts = collect();
-foreach ($itemsCart as $item) {
-    $chilexpressCalculation = App\ChilexpressPaymentCalculation::where('cart_item_id', $item->id)->get();
 
-    $deliveryAmounts->push([
-        'amount' => $chilexpressCalculation->sum('amount'),
-        'seller' => $chilexpressCalculation->count() > 0 ? $chilexpressCalculation->first()->marketplace_seller_id : null,
-    ]);
+if ($order->shipping_method == 'chilexpress') {
+    foreach ($itemsCart as $item) {
+        $chilexpressCalculation = App\ChilexpressPaymentCalculation::where('cart_item_id', $item->id)->get();
+
+        $deliveryAmounts->push([
+            'amount' => $chilexpressCalculation->sum('amount'),
+            'seller' => $chilexpressCalculation->count() > 0 ? $chilexpressCalculation->first()->marketplace_seller_id : null,
+        ]);
+    }
 }
+
 
 $transactions = [];
 
