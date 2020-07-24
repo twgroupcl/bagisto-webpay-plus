@@ -88,7 +88,26 @@ class BagistoWebPayMallController extends Controller
     {
         $configuration = new Configuration();
 
-        $configuration = $configuration->forTestingWebpayPlusMall();
+        $webPayPlus = app('Twgroup\WebPay\Payment\WebPayPlusMall');
+
+        $onProduction = (bool) $webPayPlus->getConfigData('production');
+
+        if (!$onProduction) {
+            $configuration = $configuration->forTestingWebpayPlusMall();
+        } else {
+            $configuration->setEnvironment('PRODUCCION');
+
+            $configuration->setCommerceCode($webPayPlus->getConfigData('commerce_code'));
+
+            $certificate = $webPayPlus->getConfigData('production_certificate');
+            $publicCertificate = $webPayPlus->getConfigData('production_public_certificate');
+
+            $certificateContent = file_get_contents(storage_path().'/app/public/'.$certificate);
+            $publicCertificateContent = file_get_contents(storage_path().'/app/public/'.$publicCertificate);
+
+            $configuration->setPublicCert($publicCertificateContent);
+            $configuration->setPrivateKey($certificateContent);
+        }
 
         $transaction = (new Webpay($configuration))->getMallNormalTransaction();
 
