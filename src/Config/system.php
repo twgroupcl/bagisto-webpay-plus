@@ -27,6 +27,12 @@ return [
                 'type' => 'textarea',
                 'channel_based' => false,
                 'locale_based' => true,
+            ],[
+                'name' => 'commerce_code',
+                'title' => 'Código comercio',
+                'type' => 'text',
+                'channel_based' => false,
+                'locale_based' => true,
             ], [
                 'name' => 'active',
                 'title' => 'Activo',
@@ -94,6 +100,12 @@ return [
                 'validation' => 'required',
                 'channel_based' => true,
                 'locale_based'  => true,
+            ],[
+                'name' => 'commerce_code',
+                'title' => 'Código comercio',
+                'type' => 'text',
+                'channel_based' => false,
+                'locale_based' => true,
             ], [
                 'name' => 'production',
                 'title' => 'Modo Producción',
@@ -104,6 +116,12 @@ return [
             ], [
                 'name' => 'production_certificate',
                 'title' => 'Certificado WebPayPlus Mall',
+                'type' => 'file',
+                'channel_based' => true,
+                'locale_based'  => true,
+            ],[
+                'name' => 'production_public_certificate',
+                'title' => 'Certificado Público WebPayPlus Mall',
                 'type' => 'file',
                 'channel_based' => true,
                 'locale_based'  => true,
