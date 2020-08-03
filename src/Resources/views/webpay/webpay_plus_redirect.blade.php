@@ -1,17 +1,37 @@
 @php
+$configuration = new Transbank\Webpay\Configuration();
+
 $webPayPlus = app('Twgroup\WebPay\Payment\WebPayPlus');
+
 $webPayPlusRepository = app('Twgroup\WebPay\Repositories\WebPayPlusOrderRepository');
+
+$onProduction = (bool) $webPayPlus->getConfigData('production');
+
+if (!$onProduction) {
+    $bag = Freshwork\Transbank\CertificationBagFactory::integrationWebpayNormal();  
+  
+    $plus = Freshwork\Transbank\TransbankServiceFactory::normal($bag);  
+} else {
+    $certificate = $webPayPlus->getConfigData('production_certificate');
+    $publicCertificate = $webPayPlus->getConfigData('production_public_certificate');
+
+    $certificateContent = file_get_contents(storage_path().'/app/public/'.$certificate);
+    $publicCertificateContent = file_get_contents(storage_path().'/app/public/'.$publicCertificate);
+
+    $bag = Freshwork\Transbank\CertificationBagFactory::production($certificateContent, $publicCertificateContent);
+
+    $plus = Freshwork\Transbank\TransbankServiceFactory::normal($bag);  
+}
+
 $orderRepository = app('Webkul\Sales\Repositories\OrderRepository');
 
 $order = $orderRepository->create(Cart::prepareDataForOrder());
 
-$bag = Freshwork\Transbank\CertificationBagFactory::integrationWebpayNormal();  
-  
-$plus = Freshwork\Transbank\TransbankServiceFactory::normal($bag);  
-
 $cart = $webPayPlus->getCart();
 
 $plus->addTransactionDetail($cart['grand_total'], $order->id);
+
+$cart = $webPayPlus->getCart();
 
 $response = $plus->initTransaction(route('webpay_plus.ipn'), route('webpay_plus.success'));  
 
